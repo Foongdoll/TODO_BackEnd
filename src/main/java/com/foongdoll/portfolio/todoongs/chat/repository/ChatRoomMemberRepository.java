@@ -19,8 +19,10 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
     List<ChatRoomMember> findActiveByUser(@Param("userId") String userId);
 
     @Query("""
-            select m from ChatRoomMember m
-            where m.room.pk = :roomId and m.active = true
-            """)
+    select m
+    from ChatRoomMember m
+    join fetch m.user
+    where m.room.pk = :roomId and m.active = true
+    """)
     List<ChatRoomMember> findActiveByRoom(@Param("roomId") String roomId);
 }

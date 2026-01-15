@@ -2,6 +2,7 @@ package com.foongdoll.portfolio.todoongs.chat.repository;
 
 import com.foongdoll.portfolio.todoongs.chat.entity.FriendRelation;
 import com.foongdoll.portfolio.todoongs.api.entity.Users;
+import com.foongdoll.portfolio.todoongs.api.entity.Users;
 import com.foongdoll.portfolio.todoongs.chat.model.FriendStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +18,8 @@ public interface FriendRelationRepository extends JpaRepository<FriendRelation, 
     List<FriendRelation> findByOwner(Users owner);
 
     Optional<FriendRelation> findByOwnerAndFriend(Users owner, Users friend);
+
+    List<FriendRelation> findByFriendAndStatus(Users friend, FriendStatus status);
 
     @Query("""
             select f from FriendRelation f

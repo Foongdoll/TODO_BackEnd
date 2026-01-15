@@ -42,7 +42,7 @@ public class WebSocketEventListener {
         }
         Users currentUser = user.get();
         presenceTracker.markOnline(currentUser.getPk());
-        broadcastPresence(currentUser.getPk(), true);
+        broadcastPresence(currentUser, true);
     }
 
     @EventListener
@@ -58,7 +58,7 @@ public class WebSocketEventListener {
         }
         Users currentUser = user.get();
         presenceTracker.markOffline(currentUser.getPk());
-        broadcastPresence(currentUser.getPk(), false);
+        broadcastPresence(currentUser, false);
     }
 
     private String extractEmail(StompHeaderAccessor accessor) {
@@ -75,16 +75,17 @@ public class WebSocketEventListener {
         return accessor.getUser().getName();
     }
 
-    private void broadcastPresence(String userId, boolean online) {
+    private void broadcastPresence(Users currentUser, boolean online) {
         PresenceEvent event = PresenceEvent.builder()
-                .userId(userId)
+                .userId(currentUser.getPk())
                 .online(online)
                 .at(LocalDateTime.now())
                 .build();
 
-        List<FriendRelation> relations = friendRelationRepository.findByOwnerAndStatus(userId, FriendStatus.ACTIVE);
+        List<FriendRelation> relations =
+                friendRelationRepository.findByFriendAndStatus(currentUser, FriendStatus.ACTIVE);
         for (FriendRelation relation : relations) {
-            messagingTemplate.convertAndSend("/topic/presence/" + relation.getFriend().getPk(), event);
+            messagingTemplate.convertAndSend("/topic/presence/" + relation.getOwner().getPk(), event);
         }
     }
 }

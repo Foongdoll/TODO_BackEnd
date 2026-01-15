@@ -14,7 +14,7 @@ import com.foongdoll.portfolio.todoongs.chat.model.RoomRole;
 import com.foongdoll.portfolio.todoongs.chat.repository.ChatMessageRepository;
 import com.foongdoll.portfolio.todoongs.chat.repository.ChatRoomMemberRepository;
 import com.foongdoll.portfolio.todoongs.chat.repository.ChatRoomRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -93,6 +93,7 @@ public class ChatRoomService {
         return toSummary(currentUser, saved);
     }
 
+    @Transactional(readOnly = true)
     public List<ChatRoomSummaryResponse> listRooms(Users currentUser) {
         return chatRoomRepository.findRoomsForUser(currentUser.getPk()).stream()
                 .map(room -> toSummary(currentUser, room))

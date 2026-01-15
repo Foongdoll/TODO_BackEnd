@@ -41,7 +41,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         claims.put("name", user.getName());
         claims.put("provider", user.getProvider().name());
 
-        String token = jwtProvider.createAccessToken(user.getEmail(), claims);
+        String token = jwtProvider.createToken(user.getEmail(), claims, false);
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("accessToken", token);

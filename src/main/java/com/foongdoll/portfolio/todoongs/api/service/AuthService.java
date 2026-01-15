@@ -7,4 +7,5 @@ import com.foongdoll.portfolio.todoongs.api.dto.SignUpRequest;
 public interface AuthService {
     AuthResponse login(LoginRequest request);
     AuthResponse signUp(SignUpRequest request);
+    AuthResponse refresh(String refreshToken);
 }

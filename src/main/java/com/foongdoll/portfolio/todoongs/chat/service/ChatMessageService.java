@@ -16,12 +16,13 @@ import com.foongdoll.portfolio.todoongs.chat.repository.ChatMessageReadRepositor
 import com.foongdoll.portfolio.todoongs.chat.repository.ChatMessageRepository;
 import com.foongdoll.portfolio.todoongs.chat.repository.ChatRoomMemberRepository;
 import com.foongdoll.portfolio.todoongs.chat.repository.ChatRoomRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.*;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -69,6 +70,7 @@ public class ChatMessageService {
         return response;
     }
 
+    @Transactional(readOnly = true)
     public List<ChatMessageResponse> listMessages(Users user, String roomId, int limit) {
         ChatRoom room = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Room not found"));
@@ -139,9 +141,9 @@ public class ChatMessageService {
             if (user.getPk().equals(message.getSender().getPk())) {
                 continue;
             }
-            if (!member.isNotificationsEnabled() || !user.isNotificationsEnabled()) {
-                continue;
-            }
+//            if (!member.isNotificationsEnabled() || !user.isNotificationsEnabled()) {
+//                continue;
+//            }
 
             String preview = message.getContent();
             if (preview == null || preview.isBlank()) {

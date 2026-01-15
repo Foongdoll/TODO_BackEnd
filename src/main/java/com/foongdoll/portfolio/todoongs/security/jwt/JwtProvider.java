@@ -24,6 +24,9 @@ public class JwtProvider {
     @Value("${jwt.access-token-exp-ms}")
     private long accessTokenExpMs;
 
+    @Value("${jwt.refresh-token-exp-ms}")
+    private long refreshTokenExpMs;
+
     @Value("${jwt.issuer}")
     private String issuer;
 
@@ -43,9 +46,9 @@ public class JwtProvider {
         return s;
     }
 
-    public String createAccessToken(String subject, Map<String, Object> claims) {
+    public String createToken(String subject, Map<String, Object> claims, boolean refresh) {
         Date now = new Date();
-        Date exp = new Date(now.getTime() + accessTokenExpMs);
+        Date exp = new Date(now.getTime() + (refresh ? refreshTokenExpMs : accessTokenExpMs));
 
         return Jwts.builder()
                 .setIssuer(issuer)
